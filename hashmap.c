@@ -39,11 +39,50 @@ int is_equal(void* key1, void* key2){
 }
 
 
-void insertMap(HashMap * map, char * key, void * value) 
-{
 
+/*No inserte claves repetidas. 
+Recuerde que el arreglo es **circular**.
+Recuerde actualizar la variable size.
+*/
+
+long resolveCollision(HashMap * map , long posicion , char* clave)
+{
+    while(map->current < map->capacity)
+    {
+        if (map->current != NULL || is_equal(map->buckets[posicion]->key , clave))
+        {
+            posicion++;
+            map->current ++;
+        }
+        else
+        {
+            return posicion;
+        }
+        
+    }
+    return -1;
 
 }
+
+
+   
+void insertMap(HashMap * map, char * key, void * value)
+{
+    long posicion = hash(key , map->capacity);
+    if (map->buckets[posicion] == NULL || map->buckets[posicion]->key == -1) 
+    {
+        Pair *nuevoElemento = createPair(key , value);
+        map->buckets[posicion] = nuevoElemento;
+    }
+    else
+    {
+        long  newPosition = resolveCollision(map, posicion , key);
+        Pair * nuevoElemento = createPair(key , value);
+        map->buckets[newPosition] = nuevoElemento;
+
+    }
+
+
 
 void enlarge(HashMap * map) {
     enlarge_called = 1; //no borrar (testing purposes)
