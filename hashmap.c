@@ -97,16 +97,69 @@ HashMap * createMap(long capacity)
     
 }
 
-void eraseMap(HashMap * map,  char * key) {    
+/*
+4.- Implemente la función void eraseMap(HashMap * map,  char * key). Está función elimina el dato correspondiente a la clave key. Para hacerlo debe buscar el dato y luego *marcarlo* para que no sea válido.
+**No elimine el par**, sólo invalídelo asignando NULL a la clave (pair->key=NULL).
+Recuerde actualizar la variable size.
+*/
 
 
-}
+void eraseMap(HashMap * map,  char * key) 
+{
+    long pos = hash(key , map->capacity);
+    Pair *hasElement = map->buckets[pos];
+    if (hasElement != NULL && hasElement->key != NULL && is_equal(hasElement->key  , key)) 
+    {
+        map->buckets[pos]->value = NULL;
+        map->size --;
+        return;
+    }    
+    else
+    {
+        while(map->buckets[pos] != NULL)
+        {
+            pos = (pos + 1) % map->capacity;
+            Pair *temp = map->buckets[pos];
+            if (temp != NULL && temp->key != NULL && is_equal(temp->key  , key)) 
+            {
+                map->buckets[pos]->value = NULL;
+                map->size--;
+                return;
 
-Pair * searchMap(HashMap * map,  char * key) {   
+            }
+        }
+    }
 
+    return;
+}    
+    
+Pair * searchMap(HashMap * map,  char * key) 
+{ 
+    long pos = hash(key , map->capacity);
+    Pair *hasElement = map->buckets[pos];
+    if (hasElement != NULL && hasElement->key != NULL && is_equal(hasElement->key  , key)) 
+    {
+        map->current = pos;
+        return hasElement;
+    }    
+    else
+    {
+        while(map->buckets[pos] != NULL)
+        {
+            pos = (pos + 1) % map->capacity;
+            Pair *temp = map->buckets[pos];
+            if (temp != NULL && temp->key != NULL && is_equal(temp->key  , key)) 
+            {
+                map->current = pos;
+                return temp;
+
+            }
+        }
+    }
 
     return NULL;
 }
+    
 
 Pair * firstMap(HashMap * map) {
 
@@ -118,5 +171,4 @@ Pair * nextMap(HashMap * map) {
     return NULL;
 }
 
-    return NULL;
-}
+  
