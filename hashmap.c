@@ -39,13 +39,6 @@ int is_equal(void* key1, void* key2){
 }
 
 
-
-/*No inserte claves repetidas. 
-Recuerde que el arreglo es **circular**.
-Recuerde actualizar la variable size.
-*/
-
-   
 void insertMap(HashMap *map, char *key, void *value) 
 {
     if (map == NULL || key == NULL) return;
