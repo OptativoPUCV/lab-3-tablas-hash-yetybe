@@ -97,36 +97,31 @@ HashMap * createMap(long capacity)
     
 }
 
-/*
-4.- Implemente la función void eraseMap(HashMap * map,  char * key). Está función elimina el dato correspondiente a la clave key. Para hacerlo debe buscar el dato y luego *marcarlo* para que no sea válido.
-**No elimine el par**, sólo invalídelo asignando NULL a la clave (pair->key=NULL).
-Recuerde actualizar la variable size.
-*/
-
-
 void eraseMap(HashMap * map,  char * key) 
 {
     long pos = hash(key , map->capacity);
+    long posOriginal = pos;
     Pair *hasElement = map->buckets[pos];
     if (hasElement != NULL && hasElement->key != NULL && is_equal(hasElement->key  , key)) 
     {
-        map->buckets[pos]->value = NULL;
+        map->buckets[pos]->key = NULL;
         map->size --;
         return;
     }    
     else
     {
-        while(map->buckets[pos] != NULL)
+        while(1)
         {
             pos = (pos + 1) % map->capacity;
             Pair *temp = map->buckets[pos];
             if (temp != NULL && temp->key != NULL && is_equal(temp->key  , key)) 
             {
-                map->buckets[pos]->value = NULL;
+                map->buckets[pos]->key = NULL;
                 map->size--;
                 return;
 
             }
+            if ( pos == posOriginal)break;
         }
     }
 
@@ -160,15 +155,82 @@ Pair * searchMap(HashMap * map,  char * key)
     return NULL;
 }
     
+/*
+5.- Implemente las funciones para recorrer la estructura: Pair * firstMap(HashMap * map) retorna el primer **Pair** válido del arreglo buckets. Pair * nextMap(HashMap * map) retorna el siguiente **Pair** del arreglo buckets a partir índice current. Recuerde actualizar el índice.
 
-Pair * firstMap(HashMap * map) {
+    Pair * firstMap(HashMap * map) {
+        
+
+        return NULL;
+    }
+
+    Pair * nextMap(HashMap * map)  {
+       
+
+        return NULL;
+    }
+
+
+*/
+
+
+
+
+Pair * firstMap(HashMap * map) 
+{
+    long index = 0 ; 
+    Pair *temp = map->buckets[index];
+    if (temp != NULL && temp->key != NULL && temp->value != NULL )
+    {
+        map->current = index;
+        return temp;
+    }
+    else
+    {
+        while(1)
+        {
+            index = (index + 1) % map->capacity;
+            Pair *par = map->buckets[index];
+            if (par != NULL && par->key != NULL && par->value != NULL )
+            {
+                map->current = index;
+                return par;
+            }
+            if (index == 0) break;
+        }
+
+    }
 
     return NULL;
 }
 
-Pair * nextMap(HashMap * map) {
+Pair * nextMap(HashMap * map) 
+{
+    long pos = map->current + 1;
+    Pair *temp = map->buckets[pos];
+    return temp;
+    if (temp != NULL && temp->key != NULL && temp->value != NULL )
+    {
+        map->current = pos;
+        return temp;
+    }
+    else
+    {
+        while(1)
+        {
+            pos = (pos + 1) % map->capacity;
+            Pair *par = map->buckets[pos];
+            if (par != NULL && par->key != NULL && par->value != NULL )
+            {
+                map->current = pos;
+                return par;
+            }
+            if (pos == 0) break;
+        }
 
-    return NULL;
+    }
 }
+
+  
 
   
