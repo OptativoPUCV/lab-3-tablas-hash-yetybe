@@ -45,46 +45,44 @@ Recuerde que el arreglo es **circular**.
 Recuerde actualizar la variable size.
 */
 
-long resolveCollision(HashMap * map , long posicion , char* clave)
+   
+void insertMap(HashMap *map, char *key, void *value) 
 {
-    while(map->current < map->capacity)
-    {
-        if (map->current != NULL || is_equal(map->buckets[posicion]->key , clave))
-        {
-            posicion++;
-            map->current ++;
-        }
-        else
-        {
-            return posicion;
+    if (map == NULL || key == NULL) return;
+
+    long posicion = hash(key, map->capacity);
+    long original_pos = posicion;
+
+    do {
+        
+        if (map->buckets[posicion] == NULL || 
+            (map->buckets[posicion] != NULL && map->buckets[posicion]->key == NULL)) {
+            
+            Pair *nuevoElemento = createPair(strdup(key), value);
+            map->buckets[posicion] = nuevoElemento;
+            map->current = posicion;
+            map->size++;
+            return;
         }
         
-    }
-    return -1;
+        
+        if (is_equal(map->buckets[posicion]->key, key)) {
+            return; 
+        }
 
+        
+        posicion = (posicion + 1) % map->capacity;
+
+    } while (posicion != original_pos);
+
+    
+    enlarge(map);
+    insertMap(map, key, value); 
 }
 
 
-   
-void insertMap(HashMap * map, char * key, void * value)
+void enlarge(HashMap * map) 
 {
-    long posicion = hash(key , map->capacity);
-    if (map->buckets[posicion] == NULL || map->buckets[posicion]->key == -1) 
-    {
-        Pair *nuevoElemento = createPair(key , value);
-        map->buckets[posicion] = nuevoElemento;
-    }
-    else
-    {
-        long  newPosition = resolveCollision(map, posicion , key);
-        Pair * nuevoElemento = createPair(key , value);
-        map->buckets[newPosition] = nuevoElemento;
-
-    }
-
-
-
-void enlarge(HashMap * map) {
     enlarge_called = 1; //no borrar (testing purposes)
 
 
@@ -123,6 +121,9 @@ Pair * firstMap(HashMap * map) {
 }
 
 Pair * nextMap(HashMap * map) {
+
+    return NULL;
+}
 
     return NULL;
 }
